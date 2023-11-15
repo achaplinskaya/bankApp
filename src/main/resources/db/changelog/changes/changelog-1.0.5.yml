@@ -1,0 +1,89 @@
+databaseChangeLog:
+  - preConditions:
+      - or:
+          - dbms:
+              type: postgresql
+          - dbms:
+              type: h2
+  - changeSet:
+      id: "fill-deposit-table"
+      author: "Alena Chaplinskaya"
+      preConditions:
+        - onFail: MARK_RAN
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT COUNT(*) FROM deposits
+      changes:
+        - insert:
+            tableName: deposits
+            columns:
+              - column:
+                  name: amount
+                  value: 5000.00
+              - column:
+                  name: interest_value
+                  value: 1.20
+              - column:
+                  name: interest_type
+                  value: 'MONTHLY'
+              - column:
+                  name: start_date
+                  value: '2023-10-15T12:00:00'
+              - column:
+                  name: end_date
+                  value: '2024-11-15T12:00:00'
+              - column:
+                  name: customer_id
+                  value: 1
+              - column:
+                  name: status
+                  value: 'ACTIVE'
+        - insert:
+            tableName: deposits
+            columns:
+              - column:
+                  name: amount
+                  value: 500.00
+              - column:
+                  name: interest_value
+                  value: 1.50
+              - column:
+                  name: interest_type
+                  value: 'QUARTERLY'
+              - column:
+                  name: start_date
+                  value: '2023-10-15T12:00:00'
+              - column:
+                  name: end_date
+                  value: '2024-11-15T12:00:00'
+              - column:
+                  name: customer_id
+                  value: 1
+              - column:
+                  name: status
+                  value: 'ACTIVE'
+        - insert:
+            tableName: deposits
+            columns:
+              - column:
+                  name: amount
+                  value: 1500.00
+              - column:
+                  name: interest_value
+                  value: 2.00
+              - column:
+                  name: interest_type
+                  value: 'END_OF_TERM'
+              - column:
+                  name: start_date
+                  value: '2023-10-15T12:00:00'
+              - column:
+                  name: end_date
+                  value: '2024-11-15T12:00:00'
+              - column:
+                  name: customer_id
+                  value: 1
+              - column:
+                  name: status
+                  value: "ACTIVE"
+

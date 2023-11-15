@@ -1,0 +1,78 @@
+databaseChangeLog:
+  - preConditions:
+      - or:
+          - dbms:
+              type: postgresql
+          - dbms:
+              type: h2
+  - changeSet:
+      id: "create-deposit-schema"
+      author: "Alena Chaplinskaya"
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: deposits
+      changes:
+        - createTable:
+            tableName: deposits
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: amount
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: interest_value
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: interest_type
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(50)
+              - column:
+                  name: customer_id
+                  type: BIGINT
+              - column:
+                  name: version
+                  type: int
+                  defaultValue: 0
+              - column:
+                  name: created
+                  type: timestamp
+                  defaultValueDate: current_timestamp
+                  constraints:
+                    nullable: false
+                    updatable: false
+              - column:
+                  name: updated
+                  type: timestamp
+                  defaultValueDate: current_timestamp
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseColumnNames: customer_id
+            baseTableName: deposits
+            referencedTableName: customers
+            referencedColumnNames: id
+            constraintName: fk_customer_id

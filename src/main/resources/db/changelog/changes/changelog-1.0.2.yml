@@ -1,0 +1,85 @@
+databaseChangeLog:
+  - preConditions:
+      - or:
+          - dbms:
+              type: postgresql
+          - dbms:
+              type: h2
+  - changeSet:
+      id: "create-credit-schema"
+      author: "Alena Chaplinskaya"
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: credits
+      changes:
+        - createTable:
+            tableName: credits
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: amount
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: interest_value
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: principal_amount
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_amount_due
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: penalty_amount
+                  type: decimal
+                  constraints:
+                    nullable: false
+              - column:
+                  name: customer_id
+                  type: BIGINT
+              - column:
+                  name: version
+                  type: int
+                  defaultValue: 0
+              - column:
+                  name: created
+                  type: timestamp
+                  defaultValueDate: current_timestamp
+                  constraints:
+                    nullable: false
+                    updatable: false
+              - column:
+                  name: updated
+                  type: timestamp
+                  defaultValueDate: current_timestamp
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseColumnNames: customer_id
+            baseTableName: credits
+            referencedTableName: customers
+            referencedColumnNames: id
+            constraintName: fk_customer_id

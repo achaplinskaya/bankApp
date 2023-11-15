@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - preConditions:
+      - or:
+          - dbms:
+              type: postgresql
+          - dbms:
+              type: h2
+  - changeSet:
+      id: "fill-customer-table"
+      author: "Alena Chaplinskaya"
+      preConditions:
+        - onFail: MARK_RAN
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT COUNT(*) FROM customers
+      changes:
+        - insert:
+            tableName: customers
+            columns:
+              - column:
+                  name: name
+                  value: 'Customer_1'
+              - column:
+                  name: surname
+                  value: 'Surname_1'
+              - column:
+                  name: email
+                  value: 'email@email.com'
+              - column:
+                  name: account
+                  value: '1234567890'
+              - column:
+                  name: balance
+                  value: 10000.00
+        - insert:
+            tableName: customers
+            columns:
+              - column:
+                  name: name
+                  value: 'Customer_2'
+              - column:
+                  name: surname
+                  value: 'Surname_2'
+              - column:
+                  name: email
+                  value: 'test@email.com'
+              - column:
+                  name: account
+                  value: '987654321'
+              - column:
+                  name: balance
+                  value: 50000.00
+
+
+

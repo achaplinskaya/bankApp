@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_DB_PORT}:5432"
+    networks:
+      - my-network
+
+  authorization:
+    container_name: bank_app
+    image: bank-service
+    build:
+      context: .
+    networks:
+      - my-network
+    depends_on:
+      - postgres
+    environment:
+      - SPRING_DATASOURCE_URL=${POSTGRES_DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - ./src/main/resources:/liquibase-scripts
+    ports:
+      - "${BANK_SERVICE_PORT}:9001"

@@ -1,0 +1,24 @@
+server:
+  port: ${BANK_SERVICE_PORT:9001}
+  error:
+    include-message: always
+
+spring:
+  application:
+    name: bank-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ${POSTGRES_USER:admin}
+    url: ${POSTGRES_DB_URL:jdbc:postgresql://postgres:5432/bank_db}
+    password: ${POSTGRES_PASSWORD:admin}
+    hikari:
+      leak-detection-threshold: 30000
+  jpa:
+    database: POSTGRESQL
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  liquibase:
+    enabled: true
+
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true

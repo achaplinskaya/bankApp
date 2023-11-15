@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:myDb;
+    username: h2username
+    password: h2password
+    hikari:
+      connection-init-sql: SET TIME ZONE 'UTC'
+    driver-class-name: org.h2.Driver
+  liquibase:
+    enabled: false
