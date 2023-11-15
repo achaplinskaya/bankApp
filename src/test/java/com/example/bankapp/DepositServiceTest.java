@@ -51,14 +51,4 @@ class DepositServiceTest {
         BigDecimal actual = depositService.calculateInterest(10L);
         assertEquals("", actual);
     }
-
-
-//    public static BigDecimal calculateQuarterlyInterest(BigDecimal interestRate, BigDecimal depositAmount, long days) {
-//        return depositAmount.multiply(interestRate).multiply(BigDecimal.valueOf(days))
-//                .divide(BigDecimal.valueOf(365400), RoundingMode.HALF_EVEN);
-//    }
-//
-//    public static BigDecimal calculateEndOfTermInterest(BigDecimal interestRate, BigDecimal depositAmount, long days) {
-//        return calculateMonthlyInterest(interestRate, depositAmount, days);
-//    }
 }
