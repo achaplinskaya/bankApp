@@ -11,7 +11,5 @@ public interface DepositService {
 
     void reinvestInterest(Long id);
 
-    void updateDb();
-
-    void setCurrentDateTime(LocalDateTime dateTime);
+    long calculatePeriod(LocalDateTime currentDate, LocalDateTime providedDate);
 }

@@ -3,7 +3,6 @@ package com.example.bankapp.services.impl;
 import com.example.bankapp.model.entities.CustomerEntity;
 import com.example.bankapp.model.entities.DepositEntity;
 import com.example.bankapp.model.entities.TransactionEntity;
-import com.example.bankapp.model.enums.DepositStatus;
 import com.example.bankapp.model.enums.TransactionStatus;
 import com.example.bankapp.model.enums.TransactionType;
 import com.example.bankapp.repositories.CustomerRepository;
@@ -14,7 +13,6 @@ import com.example.bankapp.utils.TimeProvider;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,8 +20,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.time.temporal.ChronoUnit;
 
 @Slf4j
 @Service
@@ -38,7 +35,6 @@ public class DepositServiceImpl implements DepositService {
     @Override
     public BigDecimal calculateInterest(Long depositId) {
         DepositEntity deposit = findById(depositId);
-
         LocalDateTime currentDate = provider.getCurrentDateTime();
 
         BigDecimal interestRate = deposit.getInterestRate();
@@ -67,7 +63,6 @@ public class DepositServiceImpl implements DepositService {
 
         customer.setBalance(customer.getBalance().add(interest));
         customerRepository.save(customer);
-
         createTransaction(deposit, TransactionType.INTEREST_PAYMENT, interest);
     }
 
@@ -82,30 +77,8 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Override
-    public void updateDb() {
-        LocalDateTime currentTime = provider.getCurrentDateTime();
-        List<DepositEntity> depositEntityList = depositRepository.findAll();
-
-        for (DepositEntity deposit: depositEntityList) {
-            log.info("Status check");
-            if (currentTime.isBefore(deposit.getStartDate()) || currentTime.isAfter(deposit.getEndDate())) {
-                deposit.setStatus(DepositStatus.CLOSED);
-                depositRepository.save(deposit);
-            }
-        }
-        List<Long> ids = depositEntityList.stream().filter(d -> d.getStatus() == DepositStatus.ACTIVE)
-                .map(d -> d.getId()).collect(Collectors.toList());
-        for (Long id : ids) {
-            log.info("ActionLog.processScheduledTasks.start: id: {}", id);
-            reinvestInterest(id);
-        }
-    }
-
-    @Override
-    public void setCurrentDateTime(LocalDateTime dateTime) {
-        provider.setCurrentDateTime(dateTime);
-        log.info("Update DB");
-        updateDb();
+    public long calculatePeriod(LocalDateTime currentDate, LocalDateTime providedDate) {
+        return ChronoUnit.DAYS.between(currentDate, providedDate) + 2;
     }
 
     public static BigDecimal calculateMonthlyInterest(BigDecimal interestRate, BigDecimal depositAmount, long days) {
@@ -136,5 +109,4 @@ public class DepositServiceImpl implements DepositService {
         return depositRepository.findById(depositId)
                 .orElseThrow(() -> new EntityNotFoundException("Deposit not found"));
     }
-
 }

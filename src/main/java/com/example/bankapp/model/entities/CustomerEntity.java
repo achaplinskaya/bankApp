@@ -8,17 +8,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.List;
 @Getter
 @Setter
 @Entity
 @Table(name = "customers")
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomerEntity extends AbstractAuditEntity{

@@ -1,6 +1,6 @@
 package com.example.bankapp.services.impl;
 
-import com.example.bankapp.services.DepositService;
+import com.example.bankapp.services.ProcessingDbChangesService;
 import com.example.bankapp.services.SchedulerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,12 +11,13 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class SchedulerServiceImpl implements SchedulerService {
-    private final DepositService depositService;
+
+    private final ProcessingDbChangesService processingDbChangesService;
 
     @Override
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 300000) // once a day
     public void processScheduledTasks() {
-        depositService.updateDb();
+        processingDbChangesService.updateDb();
     }
 
 }

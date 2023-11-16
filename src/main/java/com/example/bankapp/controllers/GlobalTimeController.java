@@ -1,6 +1,6 @@
 package com.example.bankapp.controllers;
 
-import com.example.bankapp.services.DepositService;
+import com.example.bankapp.services.ProcessingDbChangesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +18,12 @@ import java.time.LocalDateTime;
 @Tag(name = "GlobalTime")
 public class GlobalTimeController {
 
-    private final DepositService depositService;
-
+    private final ProcessingDbChangesService processingDbChangesService;
 
     @PostMapping("/set")
     @Operation(summary = "Set global time")
     public ResponseEntity<String> setGlobalTime(@RequestBody LocalDateTime newGlobalTime) {
-        depositService.setCurrentDateTime(newGlobalTime);
+        processingDbChangesService.setCurrentDateTime(newGlobalTime);
         return ResponseEntity.ok("Global time set to: " + newGlobalTime);
     }
 }
